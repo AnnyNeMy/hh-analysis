@@ -1,0 +1,426 @@
+﻿@{
+    
+    ViewBag.Title = "Index";
+}
+
+@{
+    Layout = null;
+}
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>TestMethod</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="~/Content/bootstrap-grid.min.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/Content/themes/base/jquery-ui.min.css" type="text/css" />
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.css" />
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css" />
+    <link rel="stylesheet" href="~/Content/Styles.css" type="text/css" />
+
+    <script src="~/Scripts/jquery-3.3.1.js"></script>
+    <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+    <script src="~/Scripts/popper.min.js" type="module"> </script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/bootstrap.bundle.min.js"></script>
+    <script src="~/Scripts/jsgrid.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
+    <script src="~/Scripts/svg.min.js"></script>
+    
+   
+   
+
+  
+</head>
+<body>
+ 
+    <div class="container-fluid">
+            <nav class="navbar sticky-top navbar-expand-md navbar-dark bg-dark">
+                <a class="navbar-brand" id="GetBestJob" href="#" data-toggle="tooltip" data-placement="top" title="На главную">СhooseBestJob</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#GetBestJob" aria-controls="GetBestJob" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse MyTab" id="GetBestJob">
+                    <ul class="navbar-nav nav-tabs mr-auto">
+                        <li class="nav-item">
+                            <span class="nav-link" id="tab1" href="#tabs-1">Поиск по компании</span>
+                        </li>
+                        <li class="nav-item">
+                            <span class="nav-link"  href="#tabs-2">Пользовательский поиск</span>
+                        </li>
+                        <li class="nav-item">
+                            <span class="nav-link"  href="#tabs-3">Топ 100 компаний в области IT</span>
+                        </li>
+                    </ul>
+                    <ul class="nav nav-pills">
+                        <li class="nav-item">
+                            <span class="nav-link text-white" href="#tabs-4">Контакты</span>
+                        </li>
+                    </ul>
+
+                    <!--
+                   <form class="form-inline my-2 my-md-0">
+                    <input class="form-control" type="text" placeholder="Search">
+                </form>
+                -->
+                </div>
+            </nav>
+            <!-- Вкладка 1 - поиск по компании -->
+            <div id="tabs-1" class="tabcontent">
+                <div class="row">
+                    <div class="col-md-10 col-sm-12 col-xl-7 col-lg-7">
+                        <div class="input-group inputPosition" id="DIVcompanyNameList1">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text text-wrap">Ввести название организации</span>
+                            </div>
+                            <input class="form-control" id="companyNameList1" />
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button" id="buttonCompanyNameList1"> ОК </button>  
+                                <div style="padding-left: 10px; padding-top: 15px">
+                                    <span id="loaderButtonCompanyNameList1" class="spinner-border spinner-border-sm text-secondary d-none" role="status" aria-hidden="true"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Вкладка 2 - поиск по компании -->
+            <div id="tabs-2" class="tabcontent">
+                <div class="row">
+                    <div class="col-md-10 col-sm-12 col-xl-7 col-lg-7">
+                        <div class="input-group inputPosition" id="DIVChoseIndustryList2">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text text-wrap">Выберете отрасль</span>
+                            </div>
+                            <select class="custom-select" id="IndustryList2">
+                                <option selected value="информационные технологии">информационные технологии</option>
+                            </select>
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button" id="confirmIndustryList2"> ОК </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" id="List2Select2">
+                    <div class="col-md-10 col-sm-12 col-xl-7 col-lg-7">
+                        <div class="input-group inputPosition" id="input-group2List2">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text text-wrap">Выберете критерий поиска</span>
+                            </div>
+                            <select class="custom-select" id="searchKriteryList2">
+                                <option selected value="по стеку технологий">по стеку технологий</option>
+                            </select>
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button" id="confirmKriteryNameList2"> ОК </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" id="List2Select3">
+                    <div class="col-md-10 col-sm-12 col-xl-7 col-lg-7">
+                        <div class="input-group inputPosition" id="input-group3List2">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text text-wrap">Выберете критерий поиска</span>
+                            </div>
+                            <select class="custom-select" id="searchParamsList2">
+                                <option selected>Choose...</option>
+                            </select>
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button" id="confirmParamsList2"> ОК </button>
+                                <div style="padding-left: 10px; padding-top: 15px" id="DIVloaderConfirmParamsList2" class="d-none">
+                                    <span id="loaderConfirmParamsList2" class="spinner-border spinner-border-sm text-secondary d-none" role="status" aria-hidden="true"></span>
+                                </div>
+                            </div>
+                        </div> 
+                    </div>
+                </div>
+            </div>
+
+            <!-- Вкладка 3 - поиск по компании -->
+            <div id="tabs-3" class="tabcontent">
+                <p> На данной вкладке Вы можете выбрать количество ТОП компаний для дальнейшего анализа. Критериями выбора компаний были: количество соискателей, работающих в компании и среднее количество лет, которое соискатель проработал в этой компании </p>
+                <div class="row">
+                    <div class="col-md-10 col-sm-12 col-xl-7 col-lg-7">
+                        <div class="input-group inputPosition" id="DIVChoseTOPlist3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text text-wrap">Выберете количество компаний</span>
+                            </div>
+                            <select class="custom-select" id="ChoseTOPlist3">
+                                <option selected value="100">100</option>
+                                <option value="50">50</option>
+                                <option value="200">200</option>
+                                <option value="300">300</option>
+                            </select>
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" id ="confirmChoseTOPlist3" type="button"> ОК </button>
+                                <div style="padding-left: 10px; padding-top: 15px" id="divLoaderConfirmTOPlist3">
+                                    <span id="loaderConfirmTOPlist3" class="spinner-border spinner-border-sm text-secondary d-none" role="status" aria-hidden="true"></span>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            <!-- Вкладка 4 - контакты -->
+            <div id="tabs-4" class="tabcontent">
+                <div class="marginTop">
+                    <p> Вы можете связаться с нами по электронному адресу: madden@ro.ru </p>
+                </div>
+            </div>
+
+            <!-- Вкладка  GetBestJob -->
+            <div id="greeting" class="inputPosition">
+                <h5 class="font-weight-bold text-dark"> Дорогой гость! </h5>
+                <br />
+                <p class="text-dark"> Мы рады приветствовать Вас на странице нашего проекта. </p>
+                <p class="text-dark"> Коротко о проекте: в компаниях, где уважают сотрудников, имеются интересные и развивающие задачи, своевременно выплачиваеся заработная плата, соблюдается ТК и многое другое, сотрудники работают по несколько лет... 
+                И, напротив, большая текучка кадров в компании может указывать на неудовлетворенность работающих там людей. 
+                Из подобных размышлений родилась идея данного проекта - проанализировать продолжительность трудовой деятельности соискателей сайта hh.ru в конкретных организацииях. В нашем проекте пока что рассмотрена только сфера IT. </p>
+                <p class="text-dark"> Возможно наш проект поможет Вам принять правильное решение при выборе работодателя. </p>
+                <p class="text-dark"> 
+                    На вкладке "Поиск по компании"  представлены основные статистические данные по выбранной пользователем организации и сравнение относительно других компаний.<br> 
+                    На вкладке "Пользовательский поиск" представлена информация об организациях по выбранным пользователем параметрам.<br>
+                    На вкладке "Топ компаний" представлен рейтинг компаний, отсортированных по количеству соискателей, работавших в конкретной компании и среднему количеству проработанных ими лет.
+                </p>
+               
+            </div>
+
+
+   
+        <div class="container-fluid">
+            <div id="content" class="inputPosition"></div>
+            <!--
+            <div id="jsGrid" class="inputPosition"></div>
+        -->
+
+            <div class="chart-container">
+
+            </div>
+
+            <div id="TestAnn"> </div>
+
+        </div>
+        </div>
+
+   
+
+    <script type="text/javascript">
+
+        $(function () {
+
+            $('[data-toggle="tooltip"]').tooltip()
+        });
+
+        $("#List2Select2, #List2Select3, .tabcontent").hide();
+        //$(".chart-container").empty();
+
+        $(".nav-link").click(function (evt) {
+            var tab = $(this).attr("href");
+            $(".tabcontent, #greeting").hide();
+            $(tab).show();
+            $("#List2Select3, #List2Select2, .chart-container").hide();
+            $("#searchKriteryList2, #searchParamsList2, #content").empty();
+        });
+        $("#GetBestJob").click(function (evt) {
+            $("#greeting").show();
+            // $(".tabcontent, #content").hide();
+            $(".tabcontent, #content").hide();
+            $(" #content").empty();
+        });
+
+
+        // ----------ВКЛАДКА 1 -----------------//
+        // сделаем автозаполнение на первой вкладке  - поиск по компаниям
+        $("#companyNameList1").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: '@Url.Action("GetAutokompliete", "Main")',
+                    data: { find: $("#companyNameList1").val() },
+                    datatype: "json",
+                    type: "POST",
+                    //   contentType: "application/json; charset=utf-8",
+                    // dataFilter: function (data) { return data; },
+                    success: function (data) {
+                        var str = JSON.stringify(data);
+                        response($.map(data, function (item) {
+                            return {
+                                label: item,
+                                value: item
+                            }
+                        }))
+                    }
+                });
+            },
+            minLength: 3
+        });
+
+
+        $("#buttonCompanyNameList1").click(function () {
+            var postVal = $("#companyNameList1").val();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("searchCompanys", "Main")',
+                data: { companyName: postVal },
+                datatype: "json",
+                beforeSend: function () {
+                    $('#loaderButtonCompanyNameList1').removeClass('d-none').show();
+                },
+                success: function (data) {
+                    if (data != "") {
+                        // for (var i = 0; i < data.length; i++) {
+                        //       $("#content").append('<div class="list-group" id="contorsGroupp">');
+                        //       $('#contorsGroupp').append('<button type="button" class="list-group-item list-group-item-action">' + data[i] + '</button>')
+                        //   }
+                        $("#content").html(data);
+                    } else {
+                        alert("Could not connect to server");
+                    }
+                }
+            }).always(function () {
+                // скрываем спиннер
+                $('#loaderButtonCompanyNameList1').addClass('d-none');
+            });
+        })
+
+
+        // ----------ВКЛАДКА 2 -----------------//
+        var KriteryArr = ["по стеку технологий"];
+        var specializationArr = ["выбрать все", "разработчик", "frontend разработчик", "Системный администратор", "backend разработчик", "аналитик"]
+        var steckArr = ["C#", "JavaScript", "Java", "PHP", "Phyton", "C++", "1С", "SQL"];
+
+        $("#IndustryList2").change(function () {
+            $("#List2Select3, #List2Select2").hide();
+            //    $("#List2Select2").hide();
+            $("#searchKriteryList2, #searchParamsList2").empty();
+            //    $("#searchParamsList2").empty();
+        })
+        $("#confirmIndustryList2").click(function () {
+            $("#List2Select2").show();
+            //   $("#searchKriteryList2").empty();
+            if ($("#IndustryList2").val() == "информационные технологии") {
+                for (var i = 0; i < KriteryArr.length; i++) {
+                    $("#searchKriteryList2").append('<option value="' + KriteryArr[i] + '">' + KriteryArr[i] + '</option>')
+                }
+
+            }
+        })
+
+        $("#searchKriteryList2").change(function () {
+            $("#List2Select3").hide();
+            $("#searchParamsList2").empty();
+        })
+
+        $("#confirmKriteryNameList2").click(function () {
+            $("#List2Select3").show();
+            // $("#searchParamsList2").empty();
+            if ($("#searchKriteryList2").val() == "по специализации") {
+                for (var i = 0; i < specializationArr.length; i++) {
+                    $("#searchParamsList2").append('<option value="' + specializationArr[i] + '">' + specializationArr[i] + '</option>')
+                }
+            }
+            else if ($("#searchKriteryList2").val() == "по стеку технологий") {
+                for (var i = 0; i < steckArr.length; i++) {
+                    $("#searchParamsList2").append('<option value="' + steckArr[i] + '">' + steckArr[i] + '</option>')
+                }
+            }
+        })
+
+        $("#confirmParamsList2").change(function () {
+            $("#content").empty();
+        })
+
+
+        // запрос к контроллеру - нужно получить сгруппированные данные по стеку
+        $("#confirmParamsList2").click(function () {
+            /*   if ($("#searchKriteryList2").val() == "по специализации") {
+                   var postingStack = $("#searchParamsList2").val();
+                   $.ajax({
+                       type: "POST",
+                       url: 'Url.Action("ТУТ КОНТРОЛЛЕР, КОТОРЫЙ ГРУППИРУЕТ ДАННЫЕ ПО СПЕЦИАЛИЗАЦИИ", "Main")',
+                       data: { stack: postingStack },
+                       datatype: "html",
+                       beforeSend: function () {
+                           $('#loaderConfirmParamsList2').removeClass('d-none').show();
+                       },
+                       success: function (data) {
+                           if (data != "") {
+                               $("#content").html(data);
+                           } else {
+                               alert("Could not connect to server");
+                           }
+                       }
+                   }).always(function () {
+                       // скрываем спиннер
+                       $('#loaderConfirmParamsList2').addClass('d-none');
+                   });
+               }
+               else if 
+               ($("#searchKriteryList2").val() == "по стеку технологий") { */
+            var postingStackVal = $("#searchParamsList2").val();
+            console.log("postingStackVal " + postingStackVal);
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetCompanies_stack", "Main")',
+                data: { postingStack: postingStackVal },
+                datatype: "html",
+                beforeSend: function () {
+                    $('#loaderConfirmParamsList2, #DIVloaderConfirmParamsList2').removeClass('d-none').show();
+                },
+                success: function (data) {
+                    if (data != "") {
+                        $("#content").html(data);
+                    } else {
+                        alert("Could not connect to server");
+                    }
+                }
+            }).always(function () {
+                // скрываем спиннер
+                $('#loaderConfirmParamsList2, #DIVloaderConfirmParamsList2').addClass('d-none');
+            });
+            //}
+        })
+
+
+
+        // ----------ВКЛАДКА 3 -----------------// 
+
+        $("#confirmChoseTOPlist3").click(function () {
+            var postingVal = $("#ChoseTOPlist3").val();
+            
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetAllCompanies100", "Main")',
+                data: { numberOfCompanies: postingVal },
+                datatype: "html",
+                beforeSend: function () {
+                    $('#loaderConfirmTOPlist3').removeClass('d-none').show();
+                },
+                success: function (data) {
+                    if (data != "") {
+                        $("#content").html(data);
+                    } else {
+                        alert("Could not connect to server");
+                    }
+                }
+            }).always(function () {
+                // скрываем спиннер
+                $('#loaderConfirmTOPlist3').addClass('d-none');
+
+            });
+
+        })
+
+
+    </script>
+</body>
+
+
+
+
+
+
+
