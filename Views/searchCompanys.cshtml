@@ -1,0 +1,74 @@
+﻿
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+
+<div class="row" id="finded">
+    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6">
+        <div id="">
+            <div class="list-group" id="contorsGroupp">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="contntGauss">
+
+
+</div>
+
+<script>
+        var Json = @Html.Raw(Json.Encode(Model)); // json object
+        // Проверка что пришло
+      //   var str = JSON.stringify(Json);
+    //   $('#test').text(str);
+
+    if (@Html.Raw(Json.Encode(ViewBag.company_name)) == "По данному запросу совпадения в имеющейся базе компаний отсутствуют"){
+        $("#contorsGroupp").append('<span>По Вашему запросу совпадения в имеющейся базе компаний отсутствуют</span>');
+    }
+    else{  
+        $("#contorsGroupp").append('<span>По Вашему запросу в имеющейся базе компаний найдены следующие совпадения: </span>');
+        for(var i=0; i <Json.length; i++){  
+            $('#contorsGroupp').append('<span id="compSerch" class="list-group-item list-group-item-action" value="'+ Json[i]+'">'+Json[i]+'</span>' ) 
+        }
+
+        $("#contorsGroupp span").click(function () {
+            var Value = $(this).text();
+            $("#companyNameList1").val(Value);
+            $("#finded").remove();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetGause", "Main")',
+                data: { companyName: Value },
+                datatype: "json",
+                beforeSend: function () {
+                    $('#loaderButtonCompanyNameList1').removeClass('d-none').show();
+                    $('#buttonCompanyNameList1').prop( "disabled", true );
+                },
+                success: function (data) {
+                    if (data != "") {
+                        // for (var i = 0; i < data.length; i++) {
+                        //       $("#content").append('<div class="list-group" id="contorsGroupp">');
+                        //       $('#contorsGroupp').append('<button type="button" class="list-group-item list-group-item-action">' + data[i] + '</button>')
+                        //   }
+                        $("#contntGauss").html(data);
+                    } else {
+                        alert("Could not connect to server");
+                    }
+                }
+            }).always(function(){
+                // скрываем спиннер
+                $('#loaderButtonCompanyNameList1').addClass('d-none');
+                $('#buttonCompanyNameList1').prop( "disabled", false );
+            });
+
+
+        })
+    }
+
+
+
+
+
+</script>

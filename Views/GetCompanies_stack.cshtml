@@ -1,0 +1,77 @@
+﻿
+
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+
+
+<div id="CompanyInfoTable">
+
+    <div id="contentView"></div>
+
+</div>
+<div id="test">
+
+
+</div>
+
+<script>
+        var Json = @Html.Raw(Json.Encode(Model)); // json object
+        // Проверка что пришло
+       //    var str = JSON.stringify(Json);
+        //   $('#test').text(str);
+
+           var Arr = [];
+           for(var i in Json){
+               Arr.push({
+                   company_name: Json[i].company_name,
+                   stack: Json[i].company_name,
+                   count_people: Json[i].count_people,
+                   median_duration: Json[i].median_duration.toFixed(2),
+                   max_duration: Json[i].max_duration.toFixed(2),
+                   min_duration: Json[i].min_duration.toFixed(2),
+                   average_age: Json[i].average_age.toFixed(2)
+               })
+           }
+
+
+
+           $("#contentView").append('<div id="grid"></div>');
+           $("#grid").jsGrid({
+               height: "90%",
+               width: "100%",
+
+               //  editButton: false,                               // show edit button
+               //    deleteButton: false,                             // show delete button
+               //    clearFilterButton: false,                        // show clear filter button
+               //     modeSwitchButton: false,
+
+               filtering: false,
+               editing: false,
+               inserting: false,
+               sorting: true,
+               paging: true,
+               autoload: true,
+
+               pageSize: 15,
+               pageButtonCount: 6,
+
+               //deleteConfirm: "Do you really want to delete the client?",
+
+               data: Arr,
+
+               fields: [
+                   { name: "company_name",title: "Наименование компании", type: "text", width: 180 },
+                   { name: "stack",title: "Стек технологий", type: "text", width: 180 },
+                   { name: "count_people", title:"Количество соискателей, работавших в этой компании", type: "text", width: 130, align: "center" },
+                   { name:  "median_duration", title:"Среднее количество проработанных лет", type: "number", width: 130, align: "center", css: "info"},
+                   { name: "max_duration",  title:"Максимальное количество проработанных лет", type: "number", width: 130, align: "center"  },
+                   { name: "min_duration", title:"Минимальное количество проработанных лет", type: "text", width: 130, align: "center"  },
+                   { name: "average_age", title: "Средний вораст соискателя", type: "text", width: 130, align: "center"  },
+                  // { type: "control", editButton: false, modeSwitchButton: false,  deleteButton: false,   }
+               ]
+           });
+          
+
+</script>

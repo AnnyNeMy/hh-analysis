@@ -1,0 +1,307 @@
+﻿
+
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+        <div id="contentView">
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+        <div id="drawing">
+        </div>
+    </div>
+</div>
+
+
+<div id="test">
+
+
+</div> 
+
+<script>
+        var Json = @Html.Raw(Json.Encode(Model)); // json object
+        // Проверка что пришло
+       //  var str = JSON.stringify(Json);
+    //   $('#test').text(str);
+  
+
+    /*
+         if(myJson[0] == "Частичное совпадение"){
+        $("#contentView").append('<p class="text-dark"> В базе данных найдены следующие сопадения: </p>')
+        $("#contentView").append('<div class="dropdown-menu" id="findedContors"> <span class="dropdown-item-text">выберите организацию</span></div>');
+       
+        for (var i in myJson){
+           $("#findedContors").append('<a class="dropdown-item" href="#" value = "'+ myJson[i]+'">'+ myJson[i] +'</a>')
+         }
+
+        $("#findedContors").click(function(){
+            var value = $(this).val();
+            console.log(value);
+            $.ajax({
+             type: "POST",
+             url: 'Url.Action("GetGause", "Main")',
+             data: { companyName: value },
+             datatype: "html",
+             beforeSend: function () {
+                    $('#loaderButtonCompanyNameList1').removeClass('d-none').show();
+         },
+             success: function (data) {
+                    if (data != "") {
+                        $("#content").html(data);
+         } else {
+                        alert("Could not connect to server");
+         }
+         }
+         }).always(function(){
+             // скрываем спиннер
+                $('#loaderButtonCompanyNameList1').addClass('d-none');
+         });
+         })
+         }
+         
+*/
+
+        var companyParametrs = ["Наименование компании", "Стек технологий", "Количество соискателей, работавших в этой компании","Среднее количество проработанных лет",
+                                       "Максимальное количество проработанных лет",  "Минимальное количество проработанных лет", "Средний вораст соискателя"]
+
+
+        var company_name = @Html.Raw(Json.Encode(ViewBag.company_name));
+        var stack = @Html.Raw(Json.Encode(ViewBag.stack));
+        var count_people = @Html.Raw(Json.Encode(ViewBag.count_people));
+        var median_duration = @Html.Raw(Json.Encode(ViewBag.median_duration));
+        var max_duration = @Html.Raw(Json.Encode(ViewBag.max_duration));
+        var min_duration = @Html.Raw(Json.Encode(ViewBag.min_duration));
+        var average_age = @Html.Raw(Json.Encode(ViewBag.average_age));
+
+
+        if (@Html.Raw(Json.Encode(ViewBag.company_name)) == "Введенная организация отсутствует в базе данных"){
+            $("#contentView").append('<span>Введенная организация отсутствует в базе данных</span>');
+  }
+        else{
+            $("#contentView").append('<div class="row"><div class="table-responsive-md"><div class="col-md-10 col-sm-12 col-xl-7 col-lg-7"><table class="table table-bordered table-sm"><thead class="thead-dark"><tr id="headTableAboutCompany1"></tr><tbody id = "tbodyTableAboutCompany1"></tbody></thead></table></div></div></div>');
+            for(var i = 0; i<companyParametrs.length; i++){
+                $("#headTableAboutCompany1").append('<th class="align-middle h6" scope="col">'+companyParametrs[i]+'</th>');
+            }
+
+            $("#tbodyTableAboutCompany1").append('<tr><td>'+company_name +'</td><td>'+stack+'</td><td>'+
+                                     count_people+'</td><td>'+median_duration.toFixed(2)+'</td><td>'+max_duration.toFixed(2)+'</td><td>'+min_duration.toFixed(2)+'</td><td>'+average_age.toFixed()+'</td></tr>');
+        }
+
+
+
+
+        //   ГРАФИК   SVG  !!!! //
+
+        // параметры графика
+        //1) Поле для рисования
+        var drawWidth = 1000;
+        var drawHight = 800;
+        //2) Непосредственные размеры графика
+        var chartWidth = 800;
+        var chartHight = 550;
+        // 3)  исходные точки, которые берем за 0 (чтобы немного сдвинуть график)
+        var x0 = 50;
+        var y0 = 50;
+        // 4) цвета сетки, точек, кривых
+        var gridLines = { color: '#A9A9A9', width: 1};
+        var axisLabel = {family: 'Inconsolata', size: 16, color: "#444444"};
+        var axisSign = { family: 'Inconsolata', size: 13 };
+        //    var tooltipSignalTrie = {family: 'Inconsolata', size: 9};
+        var tooltipSignalTrieHover ={family: 'Inconsolata', weight: 'bold', size: 22};
+        var companyLabel ={family: 'Inconsolata', weight: 'bold', size: 17};
+        //     var tooltipSignalFalse = {family: 'Inconsolata', size: 9};
+        //     var tooltipSignalFalseHover ={family: 'Inconsolata', size: 22, color: '#FF0000'};
+
+        // сформируем объект с исходными данными для построения графика
+        var myModel  = [];
+        for (var i=0; i< Json.length; i++){
+            console.log("Json[i].name_range - " + Json[i].name_range);
+
+            var bufstartInt = Json[i].name_range.match(/\/[-]?[0-9]+[.,]?[0-9]*\//);
+            var startIntbuf = (bufstartInt.join()).match(/[-]?[0-9]+[.,]?[0-9]*/).toString();
+            // var startInt = (bufstartInt.join()).match(/[-]?[0-9]+[.,]?[0-9]*/);
+            var startInt = parseFloat(startIntbuf.replace(',', '.'));
+
+            var bufendInt= Json[i].name_range.match(/[-]+\/[-]?[0-9]+[.,]?[0-9]*\//);
+            var endIntBuf= (bufendInt.join()).match(/[-]?[0-9]+[.,]?[0-9]*/).toString();
+            //var endInt= (bufendInt.join()).match(/[-]?[0-9]+[.,]?[0-9]*/);
+            var endInt = parseFloat(endIntBuf.replace(',', '.'));
+
+            myModel.push({startInterval: startInt, endInterval: endInt, value_range: Json[i].value_range, result: Json[i].result })
+            // console.log("startInterval = " + startInt + " endInterval = " + endInt);
+        }
+
+        for(var i in myModel){
+            console.log("startInterval = " + myModel[i].startInterval);
+            console.log(" endInterval = " + myModel[i].endInterval);
+            console.log(" value_range = " + myModel[i].value_range);
+            console.log(" result = " + myModel[i].result);
+        }
+
+
+        // функция поиска максимальных и минимальных значений всех параметров и коэффициентов модели
+        function getMaxMin(cmp, arr, attr) {
+            var val = arr[0][attr];
+            for(var i=1;i<arr.length;i++) {
+                val = cmp(val, arr[i][attr]);
+            }
+            return val;
+        }
+
+        // функция находит разницу
+        function getDifference(start, end){
+            return Math.abs(start-end);
+        }
+
+        // Найдем минимальное и максимальное значение интервала
+        var minValueStartInterval = getMaxMin(Math.min, myModel, "startInterval");
+        var maxValueEndInterval = getMaxMin(Math.max, myModel, "endInterval");
+        console.log("minValueStartInterval = " + minValueStartInterval + " maxValueEndInterval = " + maxValueEndInterval);
+        var differentX = Math.abs(minValueStartInterval - maxValueEndInterval)
+
+        console.log("differentX = " + differentX);
+        // коэффициент (шаг) для оси х
+        var koeffX = chartWidth / differentX;
+        console.log("koeffX = " + koeffX);
+
+        // максимальное и минимальное значения по оси у)
+        var maxY = getMaxMin(Math.max, myModel, "result");
+        var minY = 0;
+        var differentY = maxY - minY;
+        console.log("maxY = " + maxY + " minY = " + minY);
+        console.log("differentY = " + differentY);
+        console.log("myModel.length = "  + myModel.length);
+
+
+
+        // СТРОИМ ГРАФИК
+        var draw = SVG('drawing').size(drawWidth, drawHight);
+        draw.viewbox(0, 0, drawWidth, drawHight);
+
+        var rect = draw.rect(chartWidth, chartHight).fill("white").stroke({ width: 3 }).move(x0, y0);
+
+        // наносим на график сетку и разметку по оси у
+        // число горизонтальных линий шаг между ними
+
+        var horizontalLines = 13;
+        var lineHorizontalStep = chartHight/horizontalLines;
+        var extraMaxY = maxY + (differentY * 0.1);
+        var differentextraY = extraMaxY-minY;
+        var koeffY = chartHight / differentextraY;
+        console.log(" koeffY " + koeffY);
+
+        var YStep = differentextraY/horizontalLines;
+        console.log(" YStep " + YStep);
+        var countYStep = YStep;
+
+        for (var i = lineHorizontalStep; i < (lineHorizontalStep*(horizontalLines+1)); i+=lineHorizontalStep) {
+            var lineHorizontal = draw.line(x0, y0 + i, chartWidth+x0, y0 + i).stroke(gridLines);
+            var bufY = (extraMaxY-countYStep).toFixed(0);
+            var textY = draw.text(bufY.toString()).move(20, y0-10 + i).font(axisSign);
+            countYStep+=YStep;
+        }
+        // подпись по оси х
+        var textX = draw.text("Интервалы, лет").move(chartWidth/2, chartHight+y0+25);
+        // подпись по оси y
+        var textYAsix = draw.text("Количество повторений").move(10, chartHight/2).font(axisLabel);
+        textYAsix.rotate(270, 0, chartHight/2)
+
+        // рисуем график
+
+        var lengthMyModel = myModel.length - 1;
+        var stepX= 50;
+        for (var i in myModel) {
+            if (i==0){
+
+                var diff = Math.abs(myModel[i].startInterval- myModel[i].endInterval);
+                var oneSideRect =koeffX*diff;
+                var secondSideRect = koeffY * myModel[i].result;
+                var rect = draw.rect(oneSideRect,secondSideRect).fill('#ffdb6e').move(x0, y0 +(chartHight-secondSideRect));
+                var textAsixX = draw.text(myModel[i].startInterval.toString()).font(axisSign).move(x0-10, y0 +(chartHight+5));
+                if(myModel[i].result!=0){
+                    if(myModel[i].result<10&&myModel[i].result>0){
+                        var textValue = draw.text(myModel[i].result.toString()).fill('#3A3A3A')
+                                        .font(tooltipSignalTrieHover).move(x0+(oneSideRect*0.4), y0 +(chartHight-secondSideRect-22));
+                    }
+                    else if (myModel[i].result<100&&myModel[i].result>=10){
+                        var textValue = draw.text(myModel[i].result.toString()).fill('#3A3A3A')
+                                        .font(tooltipSignalTrieHover).move(x0+(oneSideRect*0.3), y0 +(chartHight-secondSideRect-22));
+                    }
+                    else if (myModel[i].result>=100){
+                        var textValue = draw.text(myModel[i].result.toString()).fill('#3A3A3A')
+                                        .font(tooltipSignalTrieHover).move(x0+(oneSideRect*0.15), y0 +(chartHight-secondSideRect-22));
+                    }
+                }
+            }
+            else{
+                stepX += koeffX*(Math.abs(myModel[i].startInterval-myModel[i].endInterval));
+                console.log(" stepX " + stepX);
+                // stepX_circle += koeffX * (ArrX[i] - ArrX[i-1]);
+                var diff = Math.abs(myModel[i].startInterval- myModel[i].endInterval);
+                var oneSideRect =koeffX*diff;
+                var lineVertical = draw.line(stepX, y0, stepX, y0 + chartHight).stroke(gridLines);
+                var secondSideRect = koeffY * myModel[i].result;
+                var rect = draw.rect(oneSideRect,secondSideRect).fill('#ffdb6e').move(stepX, y0 +(chartHight-secondSideRect));
+
+                if(myModel[i].result!=0){
+                    if(myModel[i].result<10&&myModel[i].result>0){
+                        var textValue = draw.text(myModel[i].result.toString()).fill('#03A3A3A')
+                                           .font(tooltipSignalTrieHover).move(stepX+(oneSideRect*0.4), y0 +(chartHight-secondSideRect-22));
+                    }
+                    else if (myModel[i].result<100&&myModel[i].result>=10){
+                        var textValue = draw.text(myModel[i].result.toString()).fill('#03A3A3A')
+                                        .font(tooltipSignalTrieHover).move(stepX+(oneSideRect*0.3), y0 +(chartHight-secondSideRect-22));
+                    }
+                    else if (myModel[i].result>=100){
+                        var textValue = draw.text(myModel[i].result.toString()).fill('#03A3A3A')
+                                        .font(tooltipSignalTrieHover).move(stepX+(oneSideRect*0.15), y0 +(chartHight-secondSideRect-22));
+                    }
+                }
+                if (i==lengthMyModel){
+                    var textAsixX = draw.text( myModel[i].startInterval.toString()).font(axisSign).move(stepX -(oneSideRect*0.2), y0 +(chartHight+5));
+                    var textAsixXEnd = draw.text( myModel[i].endInterval.toString()).font(axisSign).move(stepX+(oneSideRect*0.8), y0 +(chartHight+5));
+                }
+                else {
+                    var textAsixX = draw.text(myModel[i].startInterval.toString()).font(axisSign).move(stepX-(oneSideRect*0.2), y0 +(chartHight+5));
+                }
+
+            }
+        }
+
+        if (company_name == "Введенная организация отсутствует в базе данных"){
+            var textCompanyName = draw.text("Введенная организация отсутствует в базе данных").fill('#065D6B')
+                                           .font(companyLabel).move(x0+(chartWidth*0.4),  y0+(chartHight*0.05));
+        }
+        else{
+            if (median_duration<=maxValueEndInterval){
+
+                var companyMedian_duration = koeffX *median_duration;
+                var linecompanyMedian_duration = draw.line(companyMedian_duration+x0,  y0, companyMedian_duration+x0, y0 + chartHight).stroke({ color: '#00c2b5', width: 2, linecap: 'butt' });
+                var textCompanyName = draw.text(company_name).fill('#065D6B')
+                                               .font(companyLabel).move(companyMedian_duration+x0-22,  y0+(chartHight*0.9));
+                textCompanyName.rotate(270, companyMedian_duration+x0-21,  y0 +(chartHight*0.9));
+
+                var textCompanyVal = draw.text(median_duration.toFixed(2).toString()).fill('#065D6B')
+                                               .font(companyLabel).move(companyMedian_duration+x0+5,  y0+(chartHight*0.9));
+                textCompanyVal.rotate(270, companyMedian_duration+x0+4,  y0+(chartHight*0.9));
+            }
+
+            if (median_duration >maxValueEndInterval){
+                var maneArrov = draw.line(x0+(chartWidth*0.5),  y0+(chartHight*0.2),(chartWidth*0.999999)+x0, y0+(chartHight*0.2)).stroke({ color: '#00c2b5', width: 2, linecap: 'butt' });
+                var maneArrov = draw.line(chartWidth+x0-10, y0+5 + (chartHight*0.2), (chartWidth*0.999999)+x0,  y0+(chartHight*0.2)).stroke({ color: '#00c2b5', width: 2, linecap: 'butt' });
+                var maneArrov = draw.line(chartWidth+x0-10, y0-5 + (chartHight*0.2), (chartWidth*0.999999)+x0,  y0+(chartHight*0.2)).stroke({ color: '#00c2b5', width: 2, linecap: 'butt' });
+
+                var textCompanyName = draw.text(company_name).fill('#065D6B')
+                                               .font(companyLabel).move(x0+(chartWidth*0.5)+20,  y0+(chartHight*0.2)-22);
+                var textCompanyVal = draw.text(median_duration.toFixed(2).toString() + " лет - больше максимального значения выборки").fill('#065D6B')
+                                               .font(companyLabel).move(x0+(chartWidth*0.5)+20,  y0+(chartHight*0.2)+4);
+            }
+        }
+
+</script>
